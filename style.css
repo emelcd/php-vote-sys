@@ -1,0 +1,33 @@
+* {
+  transition: .3s;
+}
+
+.tooltip {
+    position: relative;
+  }
+  
+  .tooltip .tooltiptext {
+    position: absolute;
+    width: 150px;
+    height: fit-content;
+    visibility: hidden;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    bottom:100px;
+    padding: .25rem;
+    right:20px;
+    margin-top: 0;
+    z-index: 11;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  
+  @media (min-width: 600px) {
+    .tooltip:hover .tooltiptext {
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+  
