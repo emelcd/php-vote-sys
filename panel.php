@@ -16,14 +16,14 @@ $candidato = getUserState($conn, $id)[2]->fetch_assoc();
 
 
 if (isset($_GET['retirarC'])) {
-    $sql_retirar_candidatura = "DELETE FROM elecciones.candidatos WHERE id=$id;";
+    $sql_retirar_candidatura = "DELETE FROM Elecciones.Candidatos WHERE id=$id;";
     $conn->query($sql_retirar_candidatura);
     errorCheck($conn);
     header("Location: panel.php?banner=Candidatura Retirada");
     die();
 }
 if (isset($_GET['presentarC'])) {
-    $sql_presentar_candidatura = "INSERT INTO elecciones.candidatos VALUES ($id,0);";
+    $sql_presentar_candidatura = "INSERT INTO Elecciones.Candidatos VALUES ($id,0);";
     $conn->query($sql_presentar_candidatura);
     errorCheck($conn);
     header("Location: panel.php?banner=Candidatura Insertada");
@@ -31,18 +31,18 @@ if (isset($_GET['presentarC'])) {
 }
 if (isset($_GET['voto_a'])) {
     $id_c   =   $_GET['voto_a'];
-    $sql_borrar = "DELETE FROM elecciones.votaciones WHERE id=$id;";
+    $sql_borrar = "DELETE FROM Elecciones.Votaciones WHERE id=$id;";
     $conn->query($sql_borrar);
     errorCheck($conn);
-    $sql_votar_a = "INSERT INTO elecciones.votaciones (id, Candidato) VALUES($id, $id_c);";
+    $sql_votar_a = "INSERT INTO Elecciones.Votaciones (id, Candidato) VALUES($id, $id_c);";
     $conn->query($sql_votar_a);
     errorCheck($conn);
-    $sql_sum_c = "UPDATE elecciones.candidatos SET Num_Votos=Num_Votos+1 WHERE id=$id_c;";
+    $sql_sum_c = "UPDATE Elecciones.Candidatos SET Num_Votos=Num_Votos+1 WHERE id=$id_c;";
     $conn->query($sql_sum_c);
     errorCheck($conn);
     if (isset($votado)) {
         $id_anterior_votado = $votado["Candidato"];
-        $sql_sum_c = "UPDATE elecciones.candidatos SET Num_Votos=Num_Votos-1 WHERE id=$id_anterior_votado;";
+        $sql_sum_c = "UPDATE Elecciones.Candidatos SET Num_Votos=Num_Votos-1 WHERE id=$id_anterior_votado;";
         $conn->query($sql_sum_c);
         errorCheck($conn);
         echo ($id_anterior_votado);
@@ -53,11 +53,11 @@ if (isset($_GET['voto_a'])) {
 }
 if (isset($_GET['deleteV'])) {
     print_r($id);
-    $sql_borrar = "DELETE FROM elecciones.votaciones WHERE id=$id;";
+    $sql_borrar = "DELETE FROM Elecciones.Votaciones WHERE id=$id;";
     $conn->query($sql_borrar);
     if (isset($votado)) {
         $id_anterior_votado = $votado["Candidato"];
-        $sql_sum_c = "UPDATE elecciones.candidatos SET Num_Votos=Num_Votos-1 WHERE id=$id_anterior_votado;";
+        $sql_sum_c = "UPDATE Elecciones.Candidatos SET Num_Votos=Num_Votos-1 WHERE id=$id_anterior_votado;";
         $conn->query($sql_sum_c);
         errorCheck($conn);
         echo ($id_anterior_votado);
@@ -236,10 +236,14 @@ if (isset($_GET['deleteV'])) {
 </div>
 <br>
 
+<?php print_r($votaciones[0][1]) ?>
+<?php print_r(getUserState($conn,$votaciones[0][0])[0]->fetch_assoc()["Nombre"]) ?>
 
-
-
-
+<?php 
+    $nombre_ganador = getUserState($conn,$votaciones[0][0])[0]->fetch_assoc()["Nombre"];
+    $num_votos_ganador = $votaciones[0][1];
+    $label = "ACTUAL GANADOR/A ===> $nombre_ganador, CON $num_votos_ganador VOTOS"
+?>
 
 <script>
     var ctx = document.getElementById('voteChart').getContext('2d');
@@ -253,7 +257,7 @@ if (isset($_GET['deleteV'])) {
 
                 barPercentaje: 1,
                 minBarLength: 1,
-                label: 'NÚMERO DE VOTOS',
+                label: '<?php echo $label ?>',
                 data: <?php echo $_SESSION['n_votos'] ?>,
                 backgroundColor: [
                     'rgba(255, 100, 132, 0.2)',
@@ -285,7 +289,7 @@ if (isset($_GET['deleteV'])) {
         options: {
             title: {
                 display: true,
-                text: 'ELECCIONES 2021'
+                text: 'Elecciones 2021'
             },
             maintainAspectRatio: false,
             scales: {
@@ -298,7 +302,8 @@ if (isset($_GET['deleteV'])) {
                 xAxes: [{
                     ticks: {
                         beginAtZero: true,
-                        precision: 0
+                        precision: 0,
+                        max: 8 ,
                     }
                 }]
             },

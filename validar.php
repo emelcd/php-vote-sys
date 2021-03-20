@@ -14,6 +14,7 @@ $clave = $_GET['clave'];
 
 
 if(queryCheck($conn,$id,$clave)){
+    print_r($_SESSION);
     $_SESSION['loginID'] = $id;
     header("Location: panel.php");
     die();

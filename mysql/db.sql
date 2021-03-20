@@ -1,0 +1,113 @@
+CREATE DATABASE Elecciones
+CHARACTER SET UTF8
+COLLATE UTF8_SPANISH_CI;
+
+USE Elecciones;
+
+CREATE TABLE Usuarios(
+	id  Numeric(10),
+	Clave		   Varchar(250) NOT NULL,
+	CONSTRAINT PK_Usuarios PRIMARY KEY(id)
+);
+
+CREATE TABLE Alumnos(
+	id 		Numeric(10),
+	Nombre			Varchar(25) NOT NULL,
+	Apellido1		Varchar(25) NOT NULL,
+	Apellido2		Varchar(25),
+	FecNacimiento	Date NULL,
+	Sexo			Varchar(6),
+	Foto			Varchar(200),	
+	Propuesta		Varchar(50),	
+	CONSTRAINT PK_Alumnos PRIMARY KEY(id),
+	CONSTRAINT FK_Alumnos_Usu FOREIGN KEY (id)
+		REFERENCES Usuarios (id) ON DELETE CASCADE
+);
+
+CREATE TABLE Candidatos(
+	id 	Numeric(10),
+	Num_Votos	Numeric(10) DEFAULT 0 NOT NULL,
+	CONSTRAINT PK_Candidatos PRIMARY KEY(id),
+	CONSTRAINT FK_Candidatos_Alum FOREIGN KEY (id)
+		REFERENCES Alumnos (id) ON DELETE CASCADE,
+	CONSTRAINT CH_Votos CHECK (Num_Votos >= 0)
+);
+
+CREATE TABLE Votaciones(
+	id Numeric(10),
+	Candidato     Numeric(10) DEFAULT NULL,
+	Fecha_hora	  Timestamp DEFAULT NULL,
+    CONSTRAINT PK_Votaciones PRIMARY KEY(id),
+	CONSTRAINT FK_Votaciones_Alum FOREIGN KEY (id)
+		REFERENCES Alumnos (id) ON DELETE CASCADE,
+	CONSTRAINT FK_Votaciones_Cand FOREIGN KEY (Candidato)
+		REFERENCES Candidatos (id) ON DELETE CASCADE
+);	
+
+INSERT
+INTO Usuarios
+VALUES(1,'12345');
+INSERT
+INTO Alumnos 
+VALUES(1,'PLUTO','GARCÍA','LÓPEZ','1990/01/01','HOMBRE','1.jpg', 'SUBIR SUELDOS');
+
+INSERT
+INTO Usuarios
+VALUES(2,'12345');
+INSERT
+INTO Alumnos 
+VALUES(2,'HOMER','SIMPSON','PÉREZ','1988/01/01','HOMBRE','2.jpg', 'BAJAR SUELDOS');
+
+INSERT
+INTO Usuarios
+VALUES(3,'12345');
+INSERT
+INTO Alumnos 
+VALUES(3,'BART','SIMPSON','SUÁREZ','1999/01/01','HOMBRE','3.jpg', 'CONSTRUIR HOSPITALES');
+
+INSERT
+INTO Usuarios
+VALUES(4,'12345');
+INSERT
+INTO Alumnos 
+VALUES(4,'BOB','ESPONJA','SASE','1995/01/01','HOMBRE','4.jpg', 'CONSTRUIR ESTANCOS');
+
+INSERT
+INTO Usuarios
+VALUES(5,'12345');
+INSERT
+INTO Alumnos 
+VALUES(5,'BUGS','BUNNY','RODRÍGUEZ','1958/01/01','HOMBRE','5.jpg', 'MÁS AVIONES');
+
+INSERT
+INTO Usuarios
+VALUES(6,'12345');
+INSERT
+INTO Alumnos 
+VALUES(6,'PEPE','PITUFO','PÉREZ','1978/01/01','HOMBRE','6.jpg', 'MÁS ECOLOGISMO');
+
+INSERT
+INTO Usuarios
+VALUES(7,'12345');
+INSERT
+INTO Alumnos 
+VALUES(7,'PANTERA','ROSA','PÉREZ','1968/01/01','MUJER','7.jpg', 'MENOS CAPITALISMO');
+
+INSERT
+INTO Usuarios
+VALUES(8,'12345');
+INSERT
+INTO Alumnos 
+VALUES(8,'LISA','SIMPSON','PÉREZ','1990/01/01','MUJER','8.jpg', 'VOTO EN BLANCO');
+
+INSERT
+INTO Usuarios
+VALUES(999,'12345');
+INSERT
+INTO Alumnos 
+VALUES(999,'BLANCO','','','1900/01/01','','', 'VOTO EN BLANCO');
+
+
+
+
+INSERT INTO  Candidatos VALUES(999,0);
